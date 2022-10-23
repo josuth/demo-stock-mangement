@@ -1,11 +1,12 @@
 package com.onlinestore.stockmangement.service;
 
-import static com.onlinestore.stockmangement.GlobalTestingHelper.buildPriceEntity;
+import static com.onlinestore.stockmangement.GlobalTestingHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 
@@ -20,22 +21,23 @@ import com.onlinestore.stockmangement.errors.ConflictPricesException;
 import com.onlinestore.stockmangement.errors.PriceNotFoundException;
 import com.onlinestore.stockmangement.model.PriceDTO;
 import com.onlinestore.stockmangement.repository.PricesRepository;
+import com.onlinestore.stockmangement.service.impl.PricesServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class PriceServiceTest {
 
 	@InjectMocks
-	PricesService service;
+	PricesServiceImpl service;
 	
 	@Mock
 	PricesRepository repository;
 	
 	@Test
-	void givenPriceExists_whenfindFinalPrice_thenPriceReturns() throws PriceNotFoundException	{
+	void givenPriceExists_whenfindFinalPrice_thenPriceReturns()	{
 		Integer brandId = 1;
 		Long productId = 1L;
 		LocalDateTime date = LocalDateTime.now();
-		Mockito.when(repository.findPvP(any(), any(), any())).thenReturn(buildPriceEntity());
+		Mockito.when(repository.findOrderedPrices(any(), any(), any())).thenReturn(buildPriceEntity());
 		
 		PriceDTO returned = service.findFinalPrice(brandId, productId, date);
 		
@@ -50,7 +52,7 @@ public class PriceServiceTest {
 	}
 	
 	@Test
-	void givenPriceDoesntExist_whenfindFinalPrice_thenNotFoundException() throws PriceNotFoundException	{
+	void givenPriceDoesntExist_whenfindFinalPrice_thenNotFoundException()	{
 		Integer brandId = 1;
 		Long productId = 1L;
 		LocalDateTime date = LocalDateTime.now();
@@ -67,11 +69,11 @@ public class PriceServiceTest {
 	}
 	
 	@Test
-	void givenPriceWithTwoFares_whenfindFinalPrice_thenPriceGreaterPriorityIsReturned() throws PriceNotFoundException	{
+	void givenPriceWithTwoFares_whenfindFinalPrice_thenPriceGreaterPriorityIsReturned()	{
 		Integer brandId = 1;
 		Long productId = 2L;
 		LocalDateTime date = LocalDateTime.now();
-		Mockito.when(repository.findPvP(any(), any(), any())).thenReturn(buildPriceEntity());
+		when(repository.findOrderedPrices(any(), any(), any())).thenReturn(buildListPricesEntity());
 		
 		PriceDTO returned = service.findFinalPrice(brandId, productId, date);
 		
@@ -81,15 +83,16 @@ public class PriceServiceTest {
 		assertEquals(1, returned.getAppliedRate());
 		assertTrue(returned.getStartDate().isBefore(date));
 		assertTrue(returned.getEndDate().isAfter(date));
-		assertEquals((float)33.33, returned.getPrice());
+		assertEquals((float)22.22, returned.getPrice());
 		
 	}
 	
 	@Test
-	void givenPriceWithTwoFaresAndSamePriority_whenfindFinalPrice_thenConflictPriceExcep() throws PriceNotFoundException	{
+	void givenPriceWithTwoFaresAndSamePriority_whenfindFinalPrice_thenConflictPriceExcep()	{
 		Integer brandId = 1;
-		Long productId = 1L;
+		Long productId = 3L;
 		LocalDateTime date = LocalDateTime.now();
+		when(repository.findOrderedPrices(any(), any(), any())).thenReturn(buildListCnflictPricesEntity());
 		
 		ConflictPricesException ex = assertThrows(ConflictPricesException.class, () -> {
 			service.findFinalPrice(brandId, productId, date);
@@ -97,7 +100,7 @@ public class PriceServiceTest {
 
 		assertNotNull(ex);
 		assertEquals(1, ex.getBrandId());
-		assertEquals(2, ex.getProductId());
+		assertEquals(3, ex.getProductId());
 		assertEquals(date, ex.getDate());
 		
 	}

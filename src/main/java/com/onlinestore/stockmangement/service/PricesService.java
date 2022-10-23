@@ -2,11 +2,10 @@ package com.onlinestore.stockmangement.service;
 
 import java.time.LocalDateTime;
 
-import com.onlinestore.stockmangement.errors.PriceNotFoundException;
 import com.onlinestore.stockmangement.model.PriceDTO;
 
 public interface PricesService {
 
-	PriceDTO findFinalPrice(Integer brandId, Long productId, LocalDateTime date) throws PriceNotFoundException;
+	PriceDTO findFinalPrice(Integer brandId, Long productId, LocalDateTime date);
 
 }
