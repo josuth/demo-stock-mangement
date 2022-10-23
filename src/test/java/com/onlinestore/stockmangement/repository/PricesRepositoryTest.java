@@ -2,6 +2,7 @@ package com.onlinestore.stockmangement.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -42,7 +43,7 @@ public class PricesRepositoryTest {
 		long productId = 35455L;
 		LocalDateTime aplicationDate = LocalDateTime.of(2020, Month.JUNE, 14, 11, 0);
 		
-		List<Price> list = pricesRepository.findPvP(brandId, productId, aplicationDate);
+		List<Price> list = pricesRepository.findOrderedPrices(brandId, productId, aplicationDate);
 		
 		assertNotNull(list);
 		assertEquals(1, list.size());
@@ -54,10 +55,12 @@ public class PricesRepositoryTest {
 		long productId = 35455L;
 		LocalDateTime aplicationDate = LocalDateTime.of(2020, Month.JUNE, 14, 16, 0);
 		
-		List<Price> list = pricesRepository.findPvP(brandId, productId, aplicationDate);
+		List<Price> list = pricesRepository.findOrderedPrices(brandId, productId, aplicationDate);
 		
 		assertNotNull(list);
 		assertEquals(2, list.size());
+		// list is sorted by priority
+		assertTrue(list.get(0).getPriority() >= list.get(1).getPriority());
 	}
 	
 	@Test
@@ -66,7 +69,7 @@ public class PricesRepositoryTest {
 		long productId = 35455L;
 		LocalDateTime aplicationDate = LocalDateTime.of(2020, Month.JANUARY, 1, 13, 0);
 		
-		List<Price> list = pricesRepository.findPvP(brandId, productId, aplicationDate);
+		List<Price> list = pricesRepository.findOrderedPrices(brandId, productId, aplicationDate);
 		
 		assertNotNull(list);
 		assertEquals(0, list.size());

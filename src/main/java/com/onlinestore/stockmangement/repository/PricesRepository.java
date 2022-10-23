@@ -15,8 +15,9 @@ public interface PricesRepository extends JpaRepository<Price, Long> {
 
 	@Query("from Price p " +
            "where p.brandId=:brandId and p.productId=:productId " +
-           "  and p.startDate <= :date and p.endDate >= :date")
-	List<Price> findPvP(
+           "  and p.startDate <= :date and p.endDate >= :date " + 
+           "order by p.priority desc")
+	List<Price> findOrderedPrices(
 			@Param("brandId") Integer brandId, 
 			@Param("productId") Long productId, 
 			@Param("date") LocalDateTime date);
