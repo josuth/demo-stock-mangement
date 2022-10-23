@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinestore.stockmangement.model.PriceDTO;
+import com.onlinestore.stockmangement.service.PricesService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class PricesController {
 
+	@Autowired
+	PricesService service;
+	
 	@GetMapping("/prices/brandId/{brandId}/productId/{productId}/date/{date}")
 	ResponseEntity<PriceDTO> getFinalPrice(
 			@Valid @PathVariable("brandId")
@@ -39,6 +44,8 @@ public class PricesController {
 			LocalDateTime date)	{
 		
 		log.info("solicitando precio artículo {}", productId);
+		
+		service.findFinalPrice(brandId, productId, date);
 		
 		log.info("devolviendo precio artículo {}", productId);
 		return ResponseEntity.ok(PriceDTO.builder().build());
