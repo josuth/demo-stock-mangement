@@ -45,10 +45,10 @@ public class PricesController {
 		
 		log.info("solicitando precio artículo {}", productId);
 		
-		service.findFinalPrice(brandId, productId, date);
+		PriceDTO dto = service.findFinalPrice(brandId, productId, date);
 		
 		log.info("devolviendo precio artículo {}", productId);
-		return ResponseEntity.ok(PriceDTO.builder().build());
+		return ResponseEntity.ok(dto);
 	}
 	
 }
