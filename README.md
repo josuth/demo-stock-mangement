@@ -1,6 +1,6 @@
 # demo-stock-mangement
 
-##Enunciado
+## Enunciado
 En la base de datos de comercio electrónico de la compañía disponemos de la tabla PRICES que refleja el precio final (pvp) y la tarifa que aplica a un producto de una cadena entre unas fechas determinadas. 
 A continuación se muestra un ejemplo de la tabla con los campos relevantes:
  
@@ -22,7 +22,7 @@ Campos:
 - PRICE: precio final de venta.
 - CURR: iso de la moneda.
  
-###Se pide:
+### Se pide:
 Construir una aplicación/servicio en SpringBoot que provea una end point rest de consulta  tal que:
 
 Acepte como parámetros de entrada: fecha de aplicación, identificador de producto, identificador de cadena.
@@ -39,7 +39,7 @@ Desarrollar unos test al endpoint rest que  validen las siguientes peticiones al
 - Test 5: petición a las 21:00 del día 16 del producto 35455   para la brand 1
 	
  
-###Se valorará:
+### Se valorará:
 - Diseño y construcción del servicio.
 - Calidad de Código.
 - Resultados correctos en los test.
