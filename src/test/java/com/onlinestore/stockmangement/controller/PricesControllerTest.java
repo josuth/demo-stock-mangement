@@ -23,7 +23,7 @@ public class PricesControllerTest {
 	void givenCorrectArguments_whenGetRequest_thenSuccessReturns() throws Exception	{
 		Integer brandId = 1;
 		Long productId = 1L;
-		String date = "2020-06-14%2015%3A00%3A00";
+		String date = "2020-06-14T15:00:00";
 		
 		MockHttpServletResponse response = mvc.perform(
 				get("/prices/brandId/" + brandId + "/productId/" + productId + "/date/" + date)

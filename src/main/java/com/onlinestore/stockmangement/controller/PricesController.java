@@ -1,5 +1,7 @@
 package com.onlinestore.stockmangement.controller;
 
+import java.time.LocalDateTime;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -33,8 +35,8 @@ public class PricesController {
 			Long productId,
 	
 			@Valid @PathVariable("date") 
-			@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-			String date)	{
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+			LocalDateTime date)	{
 		
 		log.info("solicitando precio artículo {}", productId);
 		
