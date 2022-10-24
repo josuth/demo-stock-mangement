@@ -51,7 +51,7 @@ public class PricesControllerTest {
 		Integer brandId = 1;
 		Long productId = 1L;
 		LocalDateTime date = now();
-		when(service.findFinalPrice(any(), any(), any())).thenThrow(throwNotFoundException(brandId, productId, date));
+		when(service.findFinalPrice(any())).thenThrow(throwNotFoundException(brandId, productId, date));
 		
 		MockHttpServletResponse response = mvc.perform(
 				get("/prices/brandId/" + brandId + "/productId/" + productId + "/date/" + date)

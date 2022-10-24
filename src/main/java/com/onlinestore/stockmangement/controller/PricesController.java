@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlinestore.stockmangement.model.PriceDTO;
+import com.onlinestore.stockmangement.model.SearchParams;
 import com.onlinestore.stockmangement.service.PricesService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,11 @@ public class PricesController {
 		
 		log.info("solicitando precio artículo {}", productId);
 		
-		PriceDTO dto = service.findFinalPrice(brandId, productId, date);
+		PriceDTO dto = service.findFinalPrice(SearchParams.builder()
+				.brandId(brandId)
+				.productId(productId)
+				.date(date)
+				.build());
 		
 		log.info("devolviendo precio artículo {}", productId);
 		return ResponseEntity.ok(dto);

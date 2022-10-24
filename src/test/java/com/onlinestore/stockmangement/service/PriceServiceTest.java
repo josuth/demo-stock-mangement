@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.onlinestore.stockmangement.errors.ConflictPricesException;
 import com.onlinestore.stockmangement.errors.PriceNotFoundException;
 import com.onlinestore.stockmangement.model.PriceDTO;
+import com.onlinestore.stockmangement.model.SearchParams;
 import com.onlinestore.stockmangement.repository.PricesRepository;
 import com.onlinestore.stockmangement.service.impl.PricesServiceImpl;
 
@@ -39,7 +40,11 @@ public class PriceServiceTest {
 		LocalDateTime date = LocalDateTime.now();
 		Mockito.when(repository.findOrderedPrices(any(), any(), any())).thenReturn(buildPriceEntity());
 		
-		PriceDTO returned = service.findFinalPrice(brandId, productId, date);
+		PriceDTO returned = service.findFinalPrice(SearchParams.builder()
+				.brandId(brandId)
+				.productId(productId)
+				.date(date)
+				.build());
 		
 		assertNotNull(returned);
 		assertEquals(1, returned.getBrandId());
@@ -58,7 +63,11 @@ public class PriceServiceTest {
 		LocalDateTime date = LocalDateTime.now();
 		
 		PriceNotFoundException ex = assertThrows(PriceNotFoundException.class, () -> {
-			service.findFinalPrice(brandId, productId, date);
+			service.findFinalPrice(SearchParams.builder()
+					.brandId(brandId)
+					.productId(productId)
+					.date(date)
+					.build());
 		});
 
 		assertNotNull(ex);
@@ -75,7 +84,11 @@ public class PriceServiceTest {
 		LocalDateTime date = LocalDateTime.now();
 		when(repository.findOrderedPrices(any(), any(), any())).thenReturn(buildListPricesEntity());
 		
-		PriceDTO returned = service.findFinalPrice(brandId, productId, date);
+		PriceDTO returned = service.findFinalPrice(SearchParams.builder()
+				.brandId(brandId)
+				.productId(productId)
+				.date(date)
+				.build());
 		
 		assertNotNull(returned);
 		assertEquals(1, returned.getBrandId());
@@ -95,7 +108,11 @@ public class PriceServiceTest {
 		when(repository.findOrderedPrices(any(), any(), any())).thenReturn(buildListCnflictPricesEntity());
 		
 		ConflictPricesException ex = assertThrows(ConflictPricesException.class, () -> {
-			service.findFinalPrice(brandId, productId, date);
+			service.findFinalPrice(SearchParams.builder()
+					.brandId(brandId)
+					.productId(productId)
+					.date(date)
+					.build());
 		});
 
 		assertNotNull(ex);
