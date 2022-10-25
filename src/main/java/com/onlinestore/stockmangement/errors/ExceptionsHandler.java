@@ -30,13 +30,10 @@ public class ExceptionsHandler {
     public @ResponseBody List<ErrorResponse> handleException(PriceNotFoundException ex)
     {
 		log.error("not found error: " + ex.getMessage());
-		
-		List<ErrorResponse> list = new ArrayList<>();
 		String msg = String.format(
 				"there is no price with brandId:'%d', productId:'%d', date:'%s'", 
 				ex.getBrandId(), ex.getProductId(), ex.getDate());
-		list.add(buildErrorResponse(NOTFOUND_ERROR, msg));
-		return list;		
+		return List.of(buildErrorResponse(NOTFOUND_ERROR, msg));
     }
 	
 	@ExceptionHandler(value = {ConflictPricesException.class})
@@ -44,24 +41,20 @@ public class ExceptionsHandler {
     public @ResponseBody List<ErrorResponse> handleException(ConflictPricesException ex)
     {
 		log.error("conflict prices error: " + ex.getMessage());
-		
-		List<ErrorResponse> list = new ArrayList<>();
 		String msg = String.format(
 				"there is several prices overlap in time with the same priority (brandId:'%d', productId:'%d', date:'%s')", 
 				ex.getBrandId(), ex.getProductId(), ex.getDate());
-		list.add(buildErrorResponse(CONFLICT_PRICE_ERROR, msg));
-		return list;		
+		return List.of(buildErrorResponse(CONFLICT_PRICE_ERROR, msg));
     }
 	
 	@ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody List<ErrorResponse> handleException(ConstraintViolationException ex)
     {
-    	List<ErrorResponse> list = ex.getConstraintViolations().stream()
+    	return ex.getConstraintViolations().stream()
     		.peek(cv -> log.error("validating error: " + cv.getMessage()))
     		.map(p -> buildErrorResponse(VALIDATION_ERROR, p.getMessage()))
     		.collect(toList());
-    	return list;		
     }
 	
 	@ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
@@ -69,13 +62,10 @@ public class ExceptionsHandler {
     public @ResponseBody List<ErrorResponse> handleException(MethodArgumentTypeMismatchException ex)
     {
 		log.error("validating error: " + ex.getMessage());
-		
-		List<ErrorResponse> list = new ArrayList<>();
 		String msg = String.format(
 				"endpoint conversion error: '%s' parameter has an incorrect format: '%s'", 
 				ex.getName(), ex.getValue());
-		list.add(buildErrorResponse(CONVERSION_ERROR, msg));
-		return list;
+		return List.of(buildErrorResponse(CONVERSION_ERROR, msg));
     }
 	
 	static ErrorResponse buildErrorResponse(Integer code, String msg)	{

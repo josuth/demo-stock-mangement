@@ -25,9 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class PricesController {
 
-	@Autowired
 	PricesService service;
 	
+	@Autowired
+	public PricesController(PricesService service) {
+		this.service = service;
+	}
+
 	@GetMapping("/prices/brandId/{brandId}/productId/{productId}/date/{date}")
 	ResponseEntity<PriceDTO> getFinalPrice(
 			@Valid @PathVariable("brandId")
