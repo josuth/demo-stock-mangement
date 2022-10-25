@@ -2,7 +2,6 @@ package com.onlinestore.stockmangement.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,15 +58,10 @@ public class PricesServiceImpl implements PricesService {
 	
 	private Price getSelectedPrice(SearchParams p, List<Price> list, Integer higherPriority) {
 		log.info("getting highest priority price...");
-		List<Price> filteredList = list.stream()
+		return list.stream()
 				.filter(i -> i.getPriority() == higherPriority)
-				.collect(Collectors.toList());
-		
-		log.info("checking if multiple prices are found...");
-		filteredList.stream().reduce((a, b) ->{ throw buildConflictPricesExc(p); });
-		
-		return filteredList.get(0);
-
+				.reduce((a, b) ->{ throw buildConflictPricesExc(p); })
+				.get();
 	}
 	
 	private PriceDTO buildDto(Price price) {
